@@ -4,7 +4,9 @@ import org.junit.After
 import org.junit.Before
 import org.ktorm.database.Database
 import org.ktorm.database.use
+import org.ktorm.dsl.eq
 import org.ktorm.entity.Entity
+import org.ktorm.entity.filter
 import org.ktorm.entity.sequenceOf
 import org.ktorm.logging.ConsoleLogger
 import org.ktorm.logging.LogLevel
@@ -60,6 +62,7 @@ open class BaseTest {
         var name: String
         var location: LocationWrapper
         var mixedCase: String?
+        var employees: List<Employee>
     }
 
     interface Employee : Entity<Employee> {
@@ -85,7 +88,8 @@ open class BaseTest {
         companion object : Departments(null)
         override fun aliased(alias: String) = Departments(alias)
 
-        val id = int("id").primaryKey().bindTo { it.id }
+        //val id = int("id").primaryKey().bindTo { it.id }.backref({ db, dept -> db.employees.filter { it.departmentId eq dept.id } }) { it.employees }
+        val id = int("id").primaryKey().bindTo { it.id }.backref({ db, dept -> db.sequenceOf(Employees).filter { it.departmentId eq dept.id } }) { it.employees }
         val name = varchar("name").bindTo { it.name }
         val location = varchar("location").transform({ LocationWrapper(it) }, { it.underlying }).bindTo { it.location }
         val mixedCase = varchar("mixedCase").bindTo { it.mixedCase }

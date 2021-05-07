@@ -16,6 +16,7 @@
 
 package org.ktorm.schema
 
+import org.ktorm.database.Database
 import org.ktorm.dsl.QueryRowSet
 import org.ktorm.entity.*
 import kotlin.reflect.KClass
@@ -100,6 +101,24 @@ public open class Table<E : Entity<E>>(
         } else {
             return doBindInternal(ReferenceBinding(referenceTable, properties[0]))
         }
+    }
+
+    /**
+     * bind the column to list of rows in another table.
+     * @param selector a lambda in which we should return the property used to hold the referenced entities.
+     * Example (in Departments): `val id = int("id")
+     *                              .primaryKey()
+     *                              .bindTo { it.id }
+     *                              .backref({ db, department ->
+     *                                  db.employees.filter { it.departmentId eq department.id }
+     *                              }) { it.employees }`.
+     */
+    public inline fun <C : Any, R : Entity<R>, T : BaseTable<R>> Column<C>.backref(
+        query: (Database, R) -> EntitySequence<R, T>,
+        selector: (E) -> List<R>
+    ): Column<C> {
+
+        return this
     }
 
     @PublishedApi

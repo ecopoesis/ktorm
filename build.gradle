@@ -40,7 +40,7 @@ subprojects { project ->
 
     compileKotlin {
         kotlinOptions.jvmTarget = "1.6"
-        kotlinOptions.allWarningsAsErrors = true
+        kotlinOptions.allWarningsAsErrors = false
         kotlinOptions.freeCompilerArgs = [
             "-Xexplicit-api=strict",
             "-Xopt-in=kotlin.RequiresOptIn"
