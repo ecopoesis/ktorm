@@ -45,6 +45,10 @@ internal fun EntityImplementation.getColumnValue(binding: ColumnBinding): Any? {
             }
             return curr?.getProperty(binding.properties.last().name)
         }
+        is BackrefBinding -> {
+            // todo do the work
+            return null
+        }
     }
 }
 

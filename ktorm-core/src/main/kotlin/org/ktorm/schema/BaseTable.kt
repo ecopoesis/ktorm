@@ -223,6 +223,10 @@ public abstract class BaseTable<E : Any>(
                 checkCircularReference(binding.referenceTable)
                 ReferenceBinding(copyReferenceTable(binding.referenceTable), binding.onProperty)
             }
+            is BackrefBinding -> {
+                // todo probably check stuff
+                binding
+            }
         }
 
         val result = if (this.binding == null) this.copy(binding = b) else this.copy(extraBindings = extraBindings + b)
@@ -243,6 +247,11 @@ public abstract class BaseTable<E : Any>(
                     .filter { it.referenceTable.catalog == binding.referenceTable.catalog }
                     .filter { it.referenceTable.schema == binding.referenceTable.schema }
                     .filter { it.onProperty == binding.onProperty }
+                    .any()
+                is BackrefBinding -> column.allBindings
+                    .filterIsInstance<BackrefBinding>()
+                    .filter { it.onProperty == binding.onProperty }
+                    // todo what else to check for?
                     .any()
             }
 

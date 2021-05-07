@@ -46,6 +46,8 @@ public data class NestedBinding(val properties: List<KProperty1<*, *>>) : Column
  */
 public data class ReferenceBinding(val referenceTable: BaseTable<*>, val onProperty: KProperty1<*, *>) : ColumnBinding()
 
+public data class BackrefBinding(val onProperty: KProperty1<*, *>) : ColumnBinding()
+
 /**
  * Common interface of [Column] and [ScalarExpression].
  */

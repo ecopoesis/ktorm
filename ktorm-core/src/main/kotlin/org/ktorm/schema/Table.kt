@@ -117,8 +117,13 @@ public open class Table<E : Entity<E>>(
         query: (Database, R) -> EntitySequence<R, T>,
         selector: (E) -> List<R>
     ): Column<C> {
+        val properties = detectBindingProperties(selector)
 
-        return this
+        if (properties.size > 1) {
+            throw IllegalArgumentException("Backref binding doesn't support nested properties.")
+        } else {
+            return doBindInternal(BackrefBinding(properties[0]))
+        }
     }
 
     @PublishedApi
